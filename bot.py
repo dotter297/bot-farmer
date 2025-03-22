@@ -14,9 +14,9 @@ bot = Bot(token=API_TOKEN)
 storage = MemoryStorage()  # Создаем временное хранилище FSM
 dp = Dispatcher(bot, storage=storage)  # Передаем storage в Dispatcher
 
-# Регистрируем обработчики рассылки и авторизации
+# Регистрируем обработчики
 register_broadcast_handlers(dp)
-register_auth_handlers(dp)  # Регистрируем обработчики
+register_auth_handlers(dp)
 register_subscription_handlers(dp)
 
 @dp.message_handler(commands=["start"])

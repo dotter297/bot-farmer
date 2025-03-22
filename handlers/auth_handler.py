@@ -57,7 +57,7 @@ def get_sessions_keyboard():
     keyboard.add(KeyboardButton("⬅ Назад"))
     return keyboard
 
-# 1️⃣ Обработка кнопки "Сессии"
+# Обработка кнопки "Сессии"
 async def handle_sessions(message: types.Message):
     accounts = get_all_accounts()
     count = len(accounts)
@@ -70,12 +70,12 @@ async def handle_sessions(message: types.Message):
 
     await message.reply(response, reply_markup=get_sessions_keyboard())
 
-# 2️⃣ Обработка кнопки "🗑 Удалить аккаунт"
+#  Обработка кнопки "🗑 Удалить аккаунт"
 async def handle_delete_account(message: types.Message):
     await message.reply("Введите номер телефона аккаунта, который хотите удалить:")
     await AuthStates.waiting_for_delete.set()
 
-# 3️⃣ Удаление аккаунта
+#  Удаление аккаунта
 async def process_delete_account(message: types.Message, state: FSMContext):
     phone_number = message.text.strip()
     try:
@@ -87,7 +87,7 @@ async def process_delete_account(message: types.Message, state: FSMContext):
         await message.reply(f"❌ Ошибка при удалении аккаунта {phone_number}.", reply_markup=get_sessions_keyboard())
     await state.finish()
 
-# 4️⃣ Подробная статистика аккаунтов
+# Подробная статистика аккаунтов
 async def handle_account_statistics(message: types.Message):
     accounts = get_all_accounts()
     count = len(accounts)
@@ -99,7 +99,7 @@ async def handle_account_statistics(message: types.Message):
         response += "⚠ Нет активных аккаунтов."
     await message.reply(response, reply_markup=get_sessions_keyboard())
 
-# 5️⃣ Обработка кнопки "⬅ Назад"
+# Обработка кнопки "⬅ Назад"
 async def handle_back(message: types.Message, state: FSMContext):
     logger.info(f"Пользователь {message.from_user.id} вернулся в главное меню рассылки.")
 
@@ -114,12 +114,12 @@ async def handle_back(message: types.Message, state: FSMContext):
     await state.finish()
 
 
-# 1️⃣ Пользователь нажимает "📲 Добавить аккаунт"
+#  Пользователь нажимает "📲 Добавить аккаунт"
 async def handle_add_account(message: types.Message):
     await message.reply("Введите ваш номер телефона в формате: +79991234567", reply_markup=get_main_keyboard())
     await AuthStates.waiting_for_phone.set()
 
-# 2️⃣ Ввод номера телефона
+#  Ввод номера телефона
 async def process_phone(message: types.Message, state: FSMContext):
     phone_number = message.text
     auth_clients[message.chat.id] = {"phone_number": phone_number}
@@ -127,12 +127,12 @@ async def process_phone(message: types.Message, state: FSMContext):
     await message.reply("Теперь введите API ID и API HASH через пробел (например: 1234567 abcdefghijklmnopqrstuvwxyz)", reply_markup=get_main_keyboard())
     await AuthStates.waiting_for_api_keys.set()
 
-# 3️⃣ Пользователь нажимает "🔑 Ввести API ключи"
+#  Пользователь нажимает "🔑 Ввести API ключи"
 async def handle_set_api(message: types.Message):
     await message.reply("Введите API ID и API HASH через пробел", reply_markup=get_main_keyboard())
     await AuthStates.waiting_for_api_keys.set()
 
-# 4️⃣ Ввод API ID и API HASH
+#  Ввод API ID и API HASH
 async def process_api_keys(message: types.Message, state: FSMContext):
     if message.chat.id not in auth_clients or "phone_number" not in auth_clients[message.chat.id]:
         await message.reply("Сначала введите номер телефона через \"📲 Добавить аккаунт\".", reply_markup=get_main_keyboard())
@@ -155,7 +155,7 @@ async def process_api_keys(message: types.Message, state: FSMContext):
         logger.error(f"Ошибка при сохранении API ключей для {phone_number}: {e}")  # Логирование ошибки
         await message.reply(f"❌ Ошибка при сохранении API ключей.", reply_markup=get_main_keyboard())
 
-# 5️⃣ Отправка кода подтверждения
+#  Отправка кода подтверждения
 async def handle_confirm_code(message: types.Message):
     if message.chat.id not in auth_clients or "phone_number" not in auth_clients[message.chat.id]:
         await message.reply("Сначала введите номер телефона и API-ключи.", reply_markup=get_main_keyboard())
@@ -186,7 +186,7 @@ async def handle_confirm_code(message: types.Message):
         logger.error(f"Ошибка при отправке кода для {phone_number}: {e}")  # Логирование ошибки
         await message.reply(f"Ошибка при отправке кода: {e}", reply_markup=get_main_keyboard())
 
-# 6️⃣ Подтверждение кода
+#  Подтверждение кода
 async def process_confirmation_code(message: types.Message, state: FSMContext):
     if message.chat.id not in auth_clients or "phone_number" not in auth_clients[message.chat.id]:
         await message.reply("Сначала введите номер телефона и API-ключи.", reply_markup=get_main_keyboard())

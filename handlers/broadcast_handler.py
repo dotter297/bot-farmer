@@ -19,7 +19,7 @@ class BroadcastStates(StatesGroup):
     waiting_for_chat_id = State()
     waiting_for_message = State()
     waiting_for_account_selection = State()
-    waiting_for_message_count = State()  # Новое состояние для выбора количества сообщений
+    waiting_for_message_count = State()
 
 
 broadcast_data = {}  # Временное хранилище
@@ -49,20 +49,20 @@ def get_cancel_keyboard():
     return keyboard
 
 
-# 1️⃣ Меню рассылки
+#  Меню рассылки
 async def handle_broadcast_menu(message: types.Message):
     logger.info(f"Пользователь {message.from_user.id} открыл меню рассылки.")
     await message.reply("📢 Меню рассылки. Выберите действие:", reply_markup=get_broadcast_keyboard())
 
 
-# 2️⃣ Начало рассылки
+#  Начало рассылки
 async def start_broadcast(message: types.Message):
     logger.info(f"Пользователь {message.from_user.id} начал новую рассылку.")
     await message.reply("Введите ID чата, куда отправлять сообщения:")
     await BroadcastStates.waiting_for_chat_id.set()
 
 
-# 3️⃣ Получение ID чата
+# Получение ID чата
 async def process_chat_id(message: types.Message, state: FSMContext):
     chat_id = message.text.strip()
     broadcast_data[message.chat.id] = {"chat_id": chat_id}
@@ -72,7 +72,7 @@ async def process_chat_id(message: types.Message, state: FSMContext):
     await BroadcastStates.waiting_for_message.set()
 
 
-# 4️⃣ Получение сообщения
+#  Получение сообщения
 async def process_message(message: types.Message, state: FSMContext):
     if message.chat.id not in broadcast_data:
         logger.warning(f"Ошибка: отсутствуют данные для {message.chat.id}. Завершаем процесс.")
@@ -100,7 +100,7 @@ async def process_message(message: types.Message, state: FSMContext):
     await BroadcastStates.waiting_for_account_selection.set()
 
 
-# 5️⃣ Выбор аккаунтов для рассылки
+# Выбор аккаунтов для рассылки
 async def process_account_selection(message: types.Message, state: FSMContext):
     if message.chat.id not in broadcast_data:
         logger.warning(f"Ошибка: отсутствуют данные для {message.chat.id}. Завершаем процесс.")
@@ -136,7 +136,7 @@ async def process_account_selection(message: types.Message, state: FSMContext):
     await BroadcastStates.waiting_for_message_count.set()
 
 
-# 6️⃣ Получение количества сообщений
+# Получение количества сообщений
 async def process_message_count(message: types.Message, state: FSMContext):
     if message.chat.id not in broadcast_data:
         logger.warning(f"Ошибка: отсутствуют данные для {message.chat.id}. Завершаем процесс.")
@@ -186,7 +186,7 @@ async def process_message_count(message: types.Message, state: FSMContext):
     logger.info(f"Рассылка в {chat_id} завершена.")
 
 
-# 7️⃣ Обработчик кнопки "⬅ Назад"
+#Обработчик кнопки "⬅ Назад"
 async def handle_back(message: types.Message, state: FSMContext):
     from handlers.auth_handler import get_main_keyboard
     logger.info(f"Пользователь {message.from_user.id} вернулся в главное меню рассылки.")

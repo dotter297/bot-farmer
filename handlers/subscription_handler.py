@@ -8,6 +8,8 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from telethon import TelegramClient
 from database import get_all_accounts
+from telethon.tl.functions.channels import JoinChannelRequest
+from telethon.tl.functions.channels import LeaveChannelRequest
 
 # Логирование
 logging.basicConfig(level=logging.INFO)
